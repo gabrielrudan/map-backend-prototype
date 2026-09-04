@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import br.ufc.mapbackendprototype.exception.ApiError;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
@@ -29,12 +32,20 @@ public class ZoneController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar zona por ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Zona encontrada"),
+            @ApiResponse(responseCode = "404", description = "Zona não encontrada")
+    })
     public ResponseEntity<ZoneResponse> findById(@PathVariable String id) {
         return ResponseEntity.ok(zoneService.findById(id));
     }
 
     @PostMapping
     @Operation(summary = "Criar uma nova zona")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Zona criada"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     public ResponseEntity<ZoneResponse> create(
             @Valid @RequestBody ZoneRequest request
     ) {
@@ -45,6 +56,11 @@ public class ZoneController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar uma zona")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Zona atualizada"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Zona não encontrada")
+    })
     public ResponseEntity<ZoneResponse> update(
             @PathVariable String id,
             @Valid @RequestBody ZoneRequest request
@@ -54,6 +70,10 @@ public class ZoneController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Remover uma zona")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Zona removida"),
+            @ApiResponse(responseCode = "404", description = "Zona não encontrada")
+    })
     public ResponseEntity<Void> delete(@PathVariable String id) {
         zoneService.delete(id);
         return ResponseEntity.noContent().build();

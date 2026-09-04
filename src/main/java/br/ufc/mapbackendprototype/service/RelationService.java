@@ -7,6 +7,7 @@ import br.ufc.mapbackendprototype.repository.LocationRepository;
 import br.ufc.mapbackendprototype.repository.RelationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import br.ufc.mapbackendprototype.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class RelationService {
 
     public RelationResponse findById(String id) {
         Relation relation = relationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Relação não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Relação não encontrada"));
 
         return toResponse(relation);
     }
@@ -47,7 +48,7 @@ public class RelationService {
 
     public RelationResponse update(String id, RelationRequest request) {
         Relation relation = relationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Relação não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Relação não encontrada"));
 
         validateLocations(request.sourceId(), request.targetId());
 
@@ -60,18 +61,18 @@ public class RelationService {
 
     public void delete(String id) {
         Relation relation = relationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Relação não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Relação não encontrada"));
 
         relationRepository.delete(relation);
     }
 
     private void validateLocations(String sourceId, String targetId) {
         if (!locationRepository.existsById(sourceId)) {
-            throw new RuntimeException("Localização de origem não encontrada");
+            throw new ResourceNotFoundException("Localização de origem não encontrada");
         }
 
         if (!locationRepository.existsById(targetId)) {
-            throw new RuntimeException("Localização de destino não encontrada");
+            throw new ResourceNotFoundException("Localização de destino não encontrada");
         }
     }
 

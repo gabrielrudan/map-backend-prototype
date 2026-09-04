@@ -6,6 +6,7 @@ import br.ufc.mapbackendprototype.entity.Zone;
 import br.ufc.mapbackendprototype.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import br.ufc.mapbackendprototype.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class ZoneService {
 
     public ZoneResponse findById(String id) {
         Zone zone = zoneRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Zona não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Zona não encontrada"));
 
         return toResponse(zone);
     }
@@ -48,7 +49,7 @@ public class ZoneService {
 
     public ZoneResponse update(String id, ZoneRequest request) {
         Zone zone = zoneRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Zona não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Zona não encontrada"));
 
         zone.setName(request.name());
         zone.setColor(request.color());
@@ -64,7 +65,7 @@ public class ZoneService {
 
     public void delete(String id) {
         Zone zone = zoneRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Zona não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Zona não encontrada"));
 
         zoneRepository.delete(zone);
     }

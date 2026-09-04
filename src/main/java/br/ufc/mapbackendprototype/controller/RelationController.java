@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import br.ufc.mapbackendprototype.exception.ApiError;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
@@ -29,12 +32,20 @@ public class RelationController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar relação por ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Relação encontrada"),
+            @ApiResponse(responseCode = "404", description = "Relação não encontrada")
+    })
     public ResponseEntity<RelationResponse> findById(@PathVariable String id) {
         return ResponseEntity.ok(relationService.findById(id));
     }
 
     @PostMapping
     @Operation(summary = "Criar uma nova relação")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Relação criada"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     public ResponseEntity<RelationResponse> create(
             @Valid @RequestBody RelationRequest request
     ) {
@@ -45,6 +56,11 @@ public class RelationController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar uma relação")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Relação atualizada"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Relação não encontrada")
+    })
     public ResponseEntity<RelationResponse> update(
             @PathVariable String id,
             @Valid @RequestBody RelationRequest request
@@ -54,6 +70,10 @@ public class RelationController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Remover uma relação")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Relação removida"),
+            @ApiResponse(responseCode = "404", description = "Relação não encontrada")
+    })
     public ResponseEntity<Void> delete(@PathVariable String id) {
         relationService.delete(id);
         return ResponseEntity.noContent().build();

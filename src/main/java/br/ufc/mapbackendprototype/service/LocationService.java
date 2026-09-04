@@ -6,6 +6,7 @@ import br.ufc.mapbackendprototype.entity.Location;
 import br.ufc.mapbackendprototype.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import br.ufc.mapbackendprototype.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class LocationService {
 
     public LocationResponse findById(String id) {
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Localização não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Localização não encontrada"));
 
         return toResponse(location);
     }
@@ -45,7 +46,7 @@ public class LocationService {
 
     public LocationResponse update(String id, LocationRequest request) {
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Localização não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Localização não encontrada"));
 
         location.setName(request.name());
         location.setDescription(request.description());
@@ -58,7 +59,7 @@ public class LocationService {
 
     public void delete(String id) {
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Localização não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Localização não encontrada"));
 
         locationRepository.delete(location);
     }
